@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 
 app.use(cors());
@@ -41,21 +41,31 @@ async function run() {
 
     // APIs ----------------------------------------------------
 
-    // get all data
+    // find all data
     app.get('/cubes/:category', async(req, res) => {
       const tab = req.params.category;
-      console.log(tab);
-      const query = {category: tab}
+      const query = {category: tab};
 
       if(tab=='all'){
-        const result = await cubesCollection.find().toArray();
+        const result = await cubesCollection.find().limit(20).toArray();
         return res.send(result);
       } 
       else if (tab=='4x4' || tab=='3x3' || tab=='2x2') {
-        const result = await cubesCollection.find(query).toArray();
+        const result = await cubesCollection.find(query).limit(20).toArray();
         return res.send(result);
+      } else {
+        res.send([]);
       }
       
+    })
+
+    // find one
+    app.get('/details/:id', async(req, res) =>  {
+      const id = req.params.id;
+      console.log(id);
+      const query = await {_id: new ObjectId(id)};
+      const result = await cubesCollection.findOne(query);
+      res.send(result);
     })
 
 
