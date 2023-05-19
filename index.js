@@ -41,6 +41,23 @@ async function run() {
 
     // APIs ----------------------------------------------------
 
+
+    // create index
+    const indexKeys = {cubeName: 1};
+    const indexOptions = {name: 'searchByName'};
+    await cubesCollection.createIndex(indexKeys, indexOptions);
+
+    // find by search
+    app.get('/searchBy/:text', async(req, res) => {
+      const text = req.params.text;
+      console.log(text);
+      const result = await cubesCollection.find({ cubeName: { $regex : text, $options: 'i'} }).toArray();
+      res.send(result)
+    })
+
+
+
+
     // find all data
     app.get('/cubes/:category', async(req, res) => {
       const tab = req.params.category;
