@@ -36,9 +36,27 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
+    const database = client.db("cubeBuzz");
+    const cubesCollection = database.collection("cubes");
 
     // APIs ----------------------------------------------------
-    
+
+    // get all data
+    app.get('/cubes/:category', async(req, res) => {
+      const tab = req.params.category;
+      console.log(tab);
+      const query = {category: tab}
+
+      if(tab=='all'){
+        const result = await cubesCollection.find().toArray();
+        return res.send(result);
+      } 
+      else if (tab=='4x4' || tab=='3x3' || tab=='2x2') {
+        const result = await cubesCollection.find(query).toArray();
+        return res.send(result);
+      }
+      
+    })
 
 
 
