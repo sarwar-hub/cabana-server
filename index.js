@@ -11,7 +11,7 @@ require('dotenv').config();
 
 
 app.get('/', async(req, res) => {
-    res.send('cubebuzz server is running');
+    res.send('productbuzz server is running');
 })
 
 
@@ -37,21 +37,21 @@ async function run() {
     await client.connect();
 
     const database = client.db("cubeBuzz");
-    const cubesCollection = database.collection("cubes");
+    const productsCollection = database.collection("cubes");
 
     // APIs ----------------------------------------------------
 
 
     // create index
-    const indexKeys = {cubeName: 1};
+    const indexKeys = {productName: 1};
     const indexOptions = {name: 'searchByName'};
-    await cubesCollection.createIndex(indexKeys, indexOptions);
+    await productsCollection.createIndex(indexKeys, indexOptions);
 
     // find by search
     app.get('/searchBy/:text', async(req, res) => {
       const text = req.params.text;
       console.log(text);
-      const result = await cubesCollection.find({ cubeName: { $regex : text, $options: 'i'} }).toArray();
+      const result = await productsCollection.find({ productName: { $regex : text, $options: 'i'} }).toArray();
       res.send(result)
     })
 
@@ -59,16 +59,16 @@ async function run() {
 
 
     // find all data
-    app.get('/cubes/:category', async(req, res) => {
+    app.get('/products/:category', async(req, res) => {
       const tab = req.params.category;
       const query = {category: tab};
 
       if(tab=='all'){
-        const result = await cubesCollection.find().limit(20).toArray();
+        const result = await productsCollection.find().limit(20).toArray();
         return res.send(result);
       } 
       else if (tab=='4x4' || tab=='3x3' || tab=='2x2') {
-        const result = await cubesCollection.find(query).limit(20).toArray();
+        const result = await productsCollection.find(query).limit(20).toArray();
         return res.send(result);
       } else {
         res.send([]);
@@ -81,7 +81,7 @@ async function run() {
       const id = req.params.id;
       console.log(id);
       const query = await {_id: new ObjectId(id)};
-      const result = await cubesCollection.findOne(query);
+      const result = await productsCollection.findOne(query);
       res.send(result);
     })
 
