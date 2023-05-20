@@ -86,11 +86,46 @@ async function run() {
     })
 
 
+    // find using user email
+    app.get('/myProducts', async(req, res) => {
+      const email = req.query?.email;
+      console.log(email);
+      const query = {sellerEmail: email};
+      const result = await productsCollection.find(query).toArray();
+      res.send(result);
+    })
+
+
     // add one
     app.post('/addProduct', async(req, res) => {
       const product = req.body;
       console.log(product);
       const result = await productsCollection.insertOne(product);
+      res.send(result);
+    })
+
+    // delete one
+    app.delete('/deleteProduct/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await productsCollection.deleteOne(query);
+      res.send(result);
+    })
+
+
+    // update one
+    app.patch('/updateProduct/:id', async(req, res)=> {
+      const id = req.params.id;
+      const loadedNewInfo = req.body;
+      const query = {_id: new ObjectId(id)};
+      const newInfo = {
+        $set : {
+          stock: loadedNewInfo.stock,
+          price: loadedNewInfo.price,
+          description: loadedNewInfo.description
+        } 
+      }
+      const result = await productsCollection.updateOne(query, newInfo);
       res.send(result);
     })
 
