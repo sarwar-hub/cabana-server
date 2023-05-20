@@ -36,8 +36,8 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    const database = client.db("cubeBuzz");
-    const productsCollection = database.collection("cubes");
+    const database = client.db("cabana");
+    const productsCollection = database.collection("products");
 
     // APIs ----------------------------------------------------
 
@@ -67,7 +67,7 @@ async function run() {
         const result = await productsCollection.find().limit(20).toArray();
         return res.send(result);
       } 
-      else if (tab=='4x4' || tab=='3x3' || tab=='2x2') {
+      else if (tab=='science' || tab=='math' || tab=='engineering' || tab=='others') {
         const result = await productsCollection.find(query).limit(20).toArray();
         return res.send(result);
       } else {
@@ -85,6 +85,14 @@ async function run() {
       res.send(result);
     })
 
+
+    // add one
+    app.post('/addProduct', async(req, res) => {
+      const product = req.body;
+      console.log(product);
+      const result = await productsCollection.insertOne(product);
+      res.send(result);
+    })
 
 
 
