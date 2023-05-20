@@ -17,7 +17,7 @@ app.get('/', async(req, res) => {
 
 
 
-console.log(process.env.PASS)
+
 
 
 const uri = `mongodb+srv://${process.env.USER}:${process.env.PASS}@cluster0.nb3yaqn.mongodb.net/?retryWrites=true&w=majority`;
