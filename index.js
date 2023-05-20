@@ -11,7 +11,7 @@ require('dotenv').config();
 
 
 app.get('/', async(req, res) => {
-    res.send('productbuzz server is running');
+    res.send('cabana server is running');
 })
 
 
@@ -50,7 +50,7 @@ async function run() {
     // find by search
     app.get('/searchBy/:text', async(req, res) => {
       const text = req.params.text;
-      console.log(text);
+      
       const result = await productsCollection.find({ productName: { $regex : text, $options: 'i'} }).toArray();
       res.send(result)
     })
@@ -79,7 +79,7 @@ async function run() {
     // find one
     app.get('/details/:id', async(req, res) =>  {
       const id = req.params.id;
-      console.log(id);
+      
       const query = await {_id: new ObjectId(id)};
       const result = await productsCollection.findOne(query);
       res.send(result);
@@ -89,9 +89,12 @@ async function run() {
     // find using user email
     app.get('/myProducts', async(req, res) => {
       const email = req.query?.email;
-      console.log(email);
+      const sort = req.query?.sort;
+
+      let options = { sort: { price: parseInt(sort) || 1 }}
+
       const query = {sellerEmail: email};
-      const result = await productsCollection.find(query).toArray();
+      const result = await productsCollection.find(query, options).toArray();
       res.send(result);
     })
 
@@ -99,7 +102,7 @@ async function run() {
     // add one
     app.post('/addProduct', async(req, res) => {
       const product = req.body;
-      console.log(product);
+      
       const result = await productsCollection.insertOne(product);
       res.send(result);
     })
