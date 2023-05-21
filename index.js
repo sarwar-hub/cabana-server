@@ -34,7 +34,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+   // await client.connect(); // commented due to data not finding from varcel
 
     const database = client.db("cabana");
     const productsCollection = database.collection("products");
@@ -45,7 +45,7 @@ async function run() {
     // create index
     const indexKeys = {productName: 1};
     const indexOptions = {name: 'searchByName'};
-    await productsCollection.createIndex(indexKeys, indexOptions);
+   // await productsCollection.createIndex(indexKeys, indexOptions); // commented due to data not finding from varcel
 
     // find by search
     app.get('/searchBy/:text', async(req, res) => {
@@ -80,7 +80,7 @@ async function run() {
     app.get('/details/:id', async(req, res) =>  {
       const id = req.params.id;
       
-      const query = await {_id: new ObjectId(id)};
+      const query = {_id: new ObjectId(id)};
       const result = await productsCollection.findOne(query);
       res.send(result);
     })
